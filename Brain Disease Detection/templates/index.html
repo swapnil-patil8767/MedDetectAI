@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Tumor Detection</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1976d2;
+            --primary-light: #e3f2fd;
+            --primary-dark: #0d47a1;
+            --secondary: #00796b;
+            --danger: #d32f2f;
+            --success: #2e7d32;
+            --warning: #ff9800;
+            --neutral: #eceff1;
+            --text-dark: #263238;
+            --text-light: #78909c;
+        }
+        
+        body {
+            font-family: 'Roboto', 'Segoe UI', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px; /* Reduced from 1000px */
+            margin: 30px auto;
+            background-color: white;
+            padding: 0;
+            border-radius: 15px; /* Reduced from 20px */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .app-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 20px 0; /* Reduced from 30px */
+            text-align: center;
+            margin-bottom: 0;
+            position: relative;
+        }
+        
+        .app-header:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30px; /* Reduced from 40px */
+            background: white;
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+            transform: translateY(50%);
+        }
+        
+        .app-header h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 2.2rem; /* Reduced from 2.5rem */
+        }
+        
+        .app-header p {
+            opacity: 0.9;
+            font-size: 1.1rem; /* Reduced from 1.2rem */
+            max-width: 500px; /* Reduced from 600px */
+            margin: 0 auto;
+        }
+        
+        .nav-links {
+            padding: 8px 0; /* Reduced from 10px */
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 40px; /* Reduced from 50px */
+            display: inline-block;
+            margin-top: 12px; /* Reduced from 15px */
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            margin: 0 12px; /* Reduced from 15px */
+            padding: 6px 12px; /* Reduced from 8px 15px */
+            border-radius: 15px; /* Reduced from 20px */
+            transition: all 0.3s;
+            font-weight: 500;
+            display: inline-block;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .content-wrapper {
+            padding: 30px; /* Reduced from 40px */
+        }
+        
+        .upload-section {
+            text-align: center;
+            padding: 40px 25px; /* Reduced from 50px 30px */
+            border: 2px dashed #b0bec5;
+            border-radius: 12px; /* Reduced from 15px */
+            margin-bottom: 25px; /* Reduced from 30px */
+            transition: all 0.3s;
+            background-color: #fafafa;
+            position: relative;
+        }
+        
+        .upload-section.highlight {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .upload-icon {
+            font-size: 40px; /* Reduced from 48px */
+            color: var(--primary);
+            margin-bottom: 15px; /* Reduced from 20px */
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .upload-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 25px; /* Reduced from 12px 30px */
+            border: none;
+            border-radius: 25px; /* Reduced from 30px */
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(25, 118, 210, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .upload-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(25, 118, 210, 0.4);
+        }
+        
+        .result-section {
+            display: none;
+            margin-top: 30px; /* Reduced from 40px */
+        }
+        
+        .result-header {
+            text-align: center;
+            margin-bottom: 25px; /* Reduced from 30px */
+            position: relative;
+        }
+        
+        .result-header:after {
+            content: "";
+            display: block;
+            width: 80px; /* Reduced from 100px */
+            height: 3px; /* Reduced from 4px */
+            background: var(--primary);
+            margin: 12px auto 0; /* Reduced from 15px */
+            border-radius: 2px;
+        }
+        
+        .result-card {
+            background-color: white;
+            border-radius: 12px; /* Reduced from 15px */
+            padding: 20px; /* Reduced from 25px */
+            margin-top: 15px; /* Reduced from 20px */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid var(--primary); /* Reduced from 5px */
+        }
+        
+        .result-title {
+            font-weight: 700;
+            font-size: 1.3rem; /* Reduced from 1.5rem */
+            margin-bottom: 15px; /* Reduced from 20px */
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Reduced from 10px */
+        }
+        
+        .result-icon {
+            width: 35px; /* Reduced from 40px */
+            height: 35px; /* Reduced from 40px */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .result-info {
+            margin-bottom: 20px; /* Reduced from 25px */
+        }
+        
+        .result-info p {
+            margin-bottom: 12px; /* Reduced from 15px */
+            font-size: 1rem; /* Reduced from 1.1rem */
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Reduced from 10px */
+        }
+        
+        .result-info i {
+            color: var(--primary);
+            width: 18px; /* Reduced from 20px */
+            text-align: center;
+        }
+        
+        .confidence-bar {
+            height: 10px; /* Reduced from 12px */
+            background-color: #eceff1;
+            border-radius: 5px; /* Reduced from 6px */
+            margin-top: 6px; /* Reduced from 8px */
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .confidence-level {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            border-radius: 5px; /* Reduced from 6px */
+            transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        
+        .image-preview-container {
+            border-radius: 12px; /* Reduced from 15px */
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .image-preview {
+            max-width: 100%;
+            max-height: 250px; /* Reduced from 300px */
+            margin: 0 auto;
+            display: block;
+            border-radius: 12px; /* Reduced from 15px */
+        }
+        
+        .description-box {
+            background-color: var(--primary-light);
+            border-left: 3px solid var(--primary); /* Reduced from 4px */
+            padding: 15px; /* Reduced from 20px */
+            margin-top: 15px; /* Reduced from 20px */
+            border-radius: 0 8px 8px 0; /* Reduced from 0 10px 10px 0 */
+            position: relative;
+        }
+        
+        .description-box:before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: -10px; /* Reduced from -12px */
+            top: 15px; /* Reduced from 20px */
+            background: var(--primary);
+            color: white;
+            width: 20px; /* Reduced from 24px */
+            height: 20px; /* Reduced from 24px */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px; /* Reduced from 12px */
+        }
+        
+        .loader {
+            border: 4px solid #e3f2fd; /* Reduced from 5px */
+            border-top: 4px solid var(--primary); /* Reduced from 5px */
+            border-radius: 50%;
+            width: 40px; /* Reduced from 50px */
+            height: 40px; /* Reduced from 50px */
+            animation: spin 1s linear infinite;
+            margin: 25px auto; /* Reduced from 30px */
+            display: none;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loader-text {
+            text-align: center;
+            margin-top: 8px; /* Reduced from 10px */
+            font-weight: 500;
+            color: var(--primary);
+            font-size: 1rem; /* Reduced from 1.1rem */
+            display: none;
+        }
+        
+        .chart-container {
+            height: 240px; /* Reduced from 280px */
+            margin-top: 25px; /* Reduced from 30px */
+            padding: 15px; /* Reduced from 20px */
+            background-color: white;
+            border-radius: 12px; /* Reduced from 15px */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .chart-title {
+            font-size: 1.1rem; /* Reduced from 1.2rem */
+            font-weight: 600;
+            margin-bottom: 12px; /* Reduced from 15px */
+            color: var(--text-dark);
+            text-align: center;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px; /* Reduced from 50px */
+            padding: 15px 0; /* Reduced from 20px */
+            color: var(--text-light);
+            font-size: 0.9rem;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .error-message {
+            color: var(--danger);
+            text-align: center;
+            margin-top: 12px; /* Reduced from 15px */
+            display: none;
+            padding: 8px 12px; /* Reduced from 10px 15px */
+            background-color: #ffebee;
+            border-radius: 6px; /* Reduced from 8px */
+            border-left: 3px solid var(--danger); /* Reduced from 4px */
+            font-weight: 500;
+        }
+        
+        /* For responsive design */
+        @media (max-width: 767px) {
+            .content-wrapper {
+                padding: 15px; /* Reduced from 20px */
+            }
+            
+            .app-header h1 {
+                font-size: 1.8rem; /* Reduced from 2rem */
+            }
+            
+            .app-header p {
+                font-size: 0.9rem; /* Reduced from 1rem */
+            }
+            
+            .nav-link {
+                margin: 0 5px; /* Reduced from 8px */
+                padding: 5px 10px; /* Reduced from 6px 12px */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="app-header">
+            <h1><i class="fas fa-brain"></i> Brain Tumor MRI Detection</h1>
+            <p>Advanced AI-powered analysis for brain MRI scans</p>
+            <div class="nav-links">
+                <a href="/" class="nav-link active"><i class="fas fa-home"></i> Home</a>
+                <a href="/about" class="nav-link"><i class="fas fa-info-circle"></i> About</a>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="upload-section" id="uploadSection">
+                <div class="upload-icon medical-pulse">
+                    <i class="fas fa-file-medical-alt"></i>
+                </div>
+                <h3>Upload MRI Scan</h3>
+                <p>Drag and drop your MRI image or click the button below</p>
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <input type="file" id="fileInput" class="file-input" accept="image/*">
+                    <button type="button" class="upload-btn" id="uploadBtn">
+                        <i class="fas fa-upload"></i> Select MRI Image
+                    </button>
+                </form>
+                <div class="error-message" id="errorMessage"></div>
+            </div>
+
+            <div class="loader" id="loader"></div>
+            <div class="loader-text" id="loaderText">Analyzing MRI scan...</div>
+
+            <div class="result-section" id="resultSection">
+                <div class="result-header">
+                    <h2>Analysis Results</h2>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="image-preview-container">
+                            <img id="imagePreview" src="" alt="MRI Image" class="image-preview">
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="result-card">
+                            <div class="result-title" id="resultTitle">
+                                <div class="result-icon" id="resultIcon"><i class="fas fa-check-circle"></i></div>
+                                Analysis Result
+                            </div>
+                            <div class="result-info">
+                                <p><i class="fas fa-tag"></i> <strong>Diagnosis:</strong> <span id="diagnosis"></span></p>
+                                <p><i class="fas fa-chart-line"></i> <strong>Confidence:</strong> <span id="confidence"></span>%</p>
+                                <div class="confidence-bar">
+                                    <div class="confidence-level" id="confidenceBar"></div>
+                                </div>
+                            </div>
+                            <div class="description-box" id="description"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">Classification Probability Distribution</div>
+                    <canvas id="probabilityChart"></canvas>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button class="upload-btn" id="resetBtn">
+                        <i class="fas fa-sync-alt"></i> Analyze Another Scan
+                    </button>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p><i class="fas fa-heartbeat"></i> © 2025 Brain Tumor Detection | Powered by TensorFlow and Flask</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('fileInput');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const uploadForm = document.getElementById('uploadForm');
+            const uploadSection = document.getElementById('uploadSection');
+            const resultSection = document.getElementById('resultSection');
+            const loader = document.getElementById('loader');
+            const loaderText = document.getElementById('loaderText');
+            const resetBtn = document.getElementById('resetBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            let probabilityChart = null;
+            
+            // Event listeners for drag and drop functionality
+            uploadSection.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('highlight');
+            });
+            
+            uploadSection.addEventListener('dragleave', function() {
+                this.classList.remove('highlight');
+            });
+            
+            uploadSection.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('highlight');
+                
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleFileUpload();
+                }
+            });
+            
+            // Click event for the upload button
+            uploadBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // File input change event
+            fileInput.addEventListener('change', function() {
+                handleFileUpload();
+            });
+            
+            // Reset button click event
+            resetBtn.addEventListener('click', function() {
+                resetForm();
+            });
+            
+            function handleFileUpload() {
+                if (fileInput.files.length === 0) {
+                    return;
+                }
+                
+                const file = fileInput.files[0];
+                
+                // Validate file type
+                if (!file.type.match('image.*')) {
+                    showError('Please upload a valid image file (JPG, PNG, etc.)');
+                    return;
+                }
+                
+                // Hide error message if visible
+                errorMessage.style.display = 'none';
+                
+                // Show loader
+                loader.style.display = 'block';
+                loaderText.style.display = 'block';
+                uploadSection.style.display = 'none';
+                
+                // Create FormData object
+                const formData = new FormData();
+                formData.append('file', file);
+                
+                // Send AJAX request
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        showError(data.error);
+                        resetForm();
+                        return;
+                    }
+                    
+                    // Display results
+                    displayResults(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showError('An error occurred during processing. Please try again.');
+                    resetForm();
+                })
+                .finally(() => {
+                    loader.style.display = 'none';
+                    loaderText.style.display = 'none';
+                });
+            }
+            
+            function displayResults(data) {
+                // Display the image
+                document.getElementById('imagePreview').src = 'data:image/jpeg;base64,' + data.image;
+                
+                // Set diagnosis and confidence
+                document.getElementById('diagnosis').textContent = data.class_name;
+                document.getElementById('confidence').textContent = data.confidence.toFixed(2);
+                document.getElementById('confidenceBar').style.width = data.confidence + '%';
+                
+                // Set description
+                document.getElementById('description').textContent = data.description;
+                
+                // Update result title and icon based on diagnosis
+                const resultTitle = document.getElementById('resultTitle');
+                const resultIcon = document.getElementById('resultIcon');
+                
+                if (data.class_name === 'No tumor') {
+                    resultTitle.innerHTML = '<div class="result-icon" style="background-color: var(--success);"><i class="fas fa-check-circle"></i></div> No Tumor Detected';
+                    resultIcon.style.backgroundColor = 'var(--success)';
+                } else {
+                    resultTitle.innerHTML = '<div class="result-icon" style="background-color: var(--danger);"><i class="fas fa-exclamation-circle"></i></div> Tumor Detected: ' + data.class_name;
+                    resultIcon.style.backgroundColor = 'var(--danger)';
+                }
+                
+                // Create probability chart
+                createProbabilityChart(data.probabilities);
+                
+                // Show results section with a small delay for animation effect
+                setTimeout(() => {
+                    resultSection.style.display = 'block';
+                }, 300);
+            }
+            
+            function createProbabilityChart(probabilities) {
+                // Destroy previous chart if exists
+                if (probabilityChart) {
+                    probabilityChart.destroy();
+                }
+                
+                const ctx = document.getElementById('probabilityChart').getContext('2d');
+                const labels = Object.keys(probabilities);
+                const values = Object.values(probabilities);
+                
+                const barColors = [
+                    'rgba(211, 47, 47, 0.8)',   // Glioma - red
+                    'rgba(255, 152, 0, 0.8)',   // Meningioma - orange
+                    'rgba(46, 125, 50, 0.8)',   // No tumor - green
+                    'rgba(25, 118, 210, 0.8)'   // Pituitary - blue
+                ];
+                
+                probabilityChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Probability (%)',
+                            data: values,
+                            backgroundColor: barColors,
+                            borderColor: barColors.map(color => color.replace('0.8', '1')),
+                            borderWidth: 1,
+                            borderRadius: 4,
+                            maxBarThickness: 60
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: {
+                                    drawBorder: false,
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                },
+                                ticks: {
+                                    font: {
+                                        family: "'Roboto', sans-serif",
+                                        size: 11
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Probability (%)',
+                                    font: {
+                                        family: "'Roboto', sans-serif",
+                                        size: 12,
+                                        weight: 'bold'
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    font: {
+                                        family: "'Roboto', sans-serif",
+                                        size: 11
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                padding: 10,
+                                titleFont: {
+                                    family: "'Roboto', sans-serif",
+                                    size: 13
+                                },
+                                bodyFont: {
+                                    family: "'Roboto', sans-serif",
+                                    size: 12
+                                },
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.raw.toFixed(2) + '%';
+                                    }
+                                }
+                            }
+                        },
+                        animation: {
+                            duration: 1200,
+                            easing: 'easeOutQuart'
+                        }
+                    }
+                });
+            }
+            
+            function resetForm() {
+                // Reset file input
+                uploadForm.reset();
+                
+                // Hide result section and show upload section
+                resultSection.style.display = 'none';
+                uploadSection.style.display = 'block';
+                loader.style.display = 'none';
+                loaderText.style.display = 'none';
+                
+                // Clear error message
+                errorMessage.style.display = 'none';
+            }
+            
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                uploadSection.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

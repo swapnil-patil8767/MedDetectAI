@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Kidney Disease Detection</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-light: #e3f2fd;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --neutral: #ecf0f1;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+        }
+        
+        body {
+            font-family: 'Roboto', 'Segoe UI', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            background-color: white;
+            padding: 0;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .app-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 0;
+            position: relative;
+        }
+        
+        .app-header:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            background: white;
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+            transform: translateY(50%);
+        }
+        
+        .app-header h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        
+        .app-header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .nav-links {
+            padding: 8px 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            display: inline-block;
+            margin-top: 12px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            margin: 0 12px;
+            padding: 6px 12px;
+            border-radius: 15px;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: inline-block;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .content-wrapper {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .section h2 {
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: inline-block;
+            position: relative;
+            padding-bottom: 8px;
+        }
+        
+        .section h2:after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: var(--primary);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border-radius: 2px;
+        }
+        
+        .disease-type {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .disease-type:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .disease-type h3 {
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .model-info {
+            background-color: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            padding: 18px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+            position: relative;
+        }
+        
+        .model-info:before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: -12px;
+            top: 18px;
+            background: var(--primary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .disclaimer-box {
+            background-color: #fff8e1;
+            border-left: 4px solid var(--warning);
+            padding: 18px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+            position: relative;
+        }
+        
+        .disclaimer-box:before {
+            content: '\f071';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: -12px;
+            top: 18px;
+            background: var(--warning);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 15px 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        /* For responsive design */
+        @media (max-width: 767px) {
+            .content-wrapper {
+                padding: 15px;
+            }
+            
+            .app-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .app-header p {
+                font-size: 0.9rem;
+            }
+            
+            .nav-link {
+                margin: 0 5px;
+                padding: 5px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="app-header">
+            <h1><i class="fas fa-kidney"></i> Kidney Disease Detection</h1>
+            <p>Understanding the technology and medical background</p>
+            <div class="nav-links">
+                <a href="/" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="/about" class="nav-link active"><i class="fas fa-info-circle"></i> About</a>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="section">
+                <h2><i class="fas fa-cogs"></i> How It Works</h2>
+                <p>This application uses a deep learning model to analyze kidney scans and detect different types of kidney diseases. The model was trained on a dataset of kidney images and can identify four different categories:</p>
+                <ul>
+                    <li><i class="fas fa-circle text-danger"></i> Kidney Cysts</li>
+                    <li><i class="fas fa-circle text-success"></i> Normal Kidney</li>
+                    <li><i class="fas fa-circle text-warning"></i> Kidney Stones</li>
+                    <li><i class="fas fa-circle text-primary"></i> Kidney Tumors</li>
+                </ul>
+                <p>When you upload a kidney scan, the system processes the image, normalizes it, and feeds it through the neural network to generate predictions. The results show the most likely diagnosis along with confidence scores for each category.</p>
+                
+                <div class="model-info">
+                    <p><strong><i class="fas fa-server"></i> Technical Details:</strong></p>
+                    <ul>
+                        <li>Input Size: 244x244 pixels</li>
+                        <li>Fine-tuned on Kidney Disease Dataset</li>
+                        <li>Classification Categories: 4</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-heartbeat"></i> About Kidney Diseases</h2>
+                <p>Kidney diseases are conditions that affect kidney structure and function. Early detection is crucial for effective treatment and preventing complications. Here are the types of conditions this application can detect:</p>
+                
+                <div class="disease-type">
+                    <h3><i class="fas fa-circle text-danger"></i> Kidney Cyst</h3>
+                    <p>Kidney cysts are fluid-filled sacs that form on or in the kidneys. Simple kidney cysts are usually benign, don't cause symptoms, and rarely require treatment. However, multiple cysts might indicate polycystic kidney disease, a genetic disorder.</p>
+                    <p><strong>Symptoms:</strong> Most kidney cysts don't cause symptoms. Larger cysts may cause dull pain in your back or side, fever, or blood in urine.</p>
+                </div>
+                
+                <div class="disease-type">
+                    <h3><i class="fas fa-circle text-warning"></i> Kidney Stone</h3>
+                    <p>Kidney stones are hard deposits of minerals and salts that form inside your kidneys. They can affect any part of your urinary tract from your kidneys to your bladder. Passing kidney stones can be quite painful, but the stones usually cause no permanent damage.</p>
+                    <p><strong>Symptoms:</strong> Severe pain in the side and back, below the ribs, pain that radiates to the lower abdomen and groin, pain that comes in waves and fluctuates in intensity, pink, red or brown urine, cloudy or foul-smelling urine.</p>
+                </div>
+                
+                <div class="disease-type">
+                    <h3><i class="fas fa-circle text-primary"></i> Kidney Tumor</h3>
+                    <p>Kidney tumors can be benign (non-cancerous) or malignant (cancerous). Renal cell carcinoma is the most common type of kidney cancer in adults. The exact causes of kidney tumors are not known, but smoking, obesity, and high blood pressure are risk factors.</p>
+                    <p><strong>Symptoms:</strong> Blood in urine, persistent back pain just below the ribs, weight loss, fatigue, intermittent fever.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-exclamation-triangle"></i> Important Disclaimer</h2>
+                <div class="disclaimer-box">
+                    <p>This application is intended for educational and research purposes only. It should not replace professional medical diagnosis or advice. Always consult with a qualified healthcare provider for proper diagnosis and treatment of medical conditions.</p>
+                    <p>The model's predictions are based on training data and may not be 100% accurate for all cases. False positives and false negatives are possible.</p>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p><i class="fas fa-heartbeat"></i> © 2025 Kidney Disease Detection | Powered by TensorFlow and Flask</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
